@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:anzus/routes.dart';
 import 'package:anzus/theme.dart';
-import 'package:anzus/pages/HomeScreen.dart';
+import 'package:anzus/HomeScreen//HomeScreen.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,12 +11,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp>{
-  Widget rootPage = HomeScreen();
+  Widget rootPage = new HomeScreen();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My App',
+      title: 'Anzus',
       home: rootPage,
       routes: buildAppRoutes(),
       theme: buildAppTheme(),
