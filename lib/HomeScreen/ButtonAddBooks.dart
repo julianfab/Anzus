@@ -1,5 +1,8 @@
+import 'package:anzus/Database/DataBaseSQL.dart';
+import 'package:anzus/Model/ModelMyBooks.dart';
 import 'package:flutter/material.dart';
-import 'package:anzus/routes.dart';
+
+TextEditingController _Name_Books_Controller;
 
 class ButtonAddBooks extends StatefulWidget{
   @override
@@ -8,6 +11,9 @@ class ButtonAddBooks extends StatefulWidget{
 
 class _ButtonAddBooks extends State<ButtonAddBooks>{
 
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,16 +23,22 @@ class _ButtonAddBooks extends State<ButtonAddBooks>{
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-       Text(
-      "My Books",
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w400,
-          color: Colors.black,
+        Expanded(
+          child: Text(
+          "My Books",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+              color: Colors.black,
+            ),
+          ),
         ),
-      ),
+        Expanded(
+        child:
         RaisedButton(
-            onPressed:(){},
+            onPressed:(){
+              insert(context);
+            },
             color: Colors.green,
             child: Text(
               "Add Books",
@@ -37,8 +49,48 @@ class _ButtonAddBooks extends State<ButtonAddBooks>{
               ),
             )
         )
+        )
       ],
     ),
     );
   }
+
+
 }
+
+
+void insert(BuildContext context){
+MyBooks mu = new MyBooks();
+DataBaseHelperSQL _DBHelperSQL = new DataBaseHelperSQL();
+  showDialog(
+    context: context,
+    builder: (BuildContext context){
+      return AlertDialog(
+        title: Text("Insert new Book"),
+        content: TextField(
+          onChanged: (value){
+            mu.Name_Book = value;
+          },
+          decoration: InputDecoration(labelText: 'New Book'),),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Cancel"),
+            onPressed: (){
+
+            },
+          ),
+          FlatButton(
+            child: Text("Acept"),
+            onPressed: (){
+                _DBHelperSQL.newBook(mu);
+                Navigator.of(context).pop();
+              },
+          ),
+        ],
+      );
+    }
+  );
+
+}
+
+
