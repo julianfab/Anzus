@@ -29,27 +29,31 @@ class _HomeTopics extends State<HomeTopics>{
               color: Colors.black,
             ),
             Row(
-
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text("Topic 1"),
-                    Text("from book1"),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    Text("Topic 2"),
-                    Text("from book2"),
-                  ],
-                ),
-                Column(
-                  children: <Widget>[
-                    Text("Topics3",),
-                    Text("from book3"),
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      Text("Topic 1"),
+                      Text("from book1"),
                     ],
-                  )
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      Text("Topic 2"),
+                      Text("from book2"),
+                    ],
+                  ),
+                ),Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      Text("Topic 3"),
+                      Text("from book3"),
+                    ],
+                  ),
+                ),
               ],
             )
           ],
