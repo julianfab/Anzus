@@ -60,7 +60,7 @@ class _ButtonAddBooks extends State<ButtonAddBooks>{
 
 
 void insert(BuildContext context){
-MyBooks mu = new MyBooks();
+MyBooks book = new MyBooks();
 DataBaseHelperSQL _DBHelperSQL = new DataBaseHelperSQL();
   showDialog(
     context: context,
@@ -69,20 +69,20 @@ DataBaseHelperSQL _DBHelperSQL = new DataBaseHelperSQL();
         title: Text("Insert new Book"),
         content: TextField(
           onChanged: (value){
-            mu.Name_Book = value;
+            book.Name_Book = value;
           },
           decoration: InputDecoration(labelText: 'New Book'),),
         actions: <Widget>[
           FlatButton(
             child: Text("Cancel"),
             onPressed: (){
-
+              Navigator.of(context).pop();
             },
           ),
           FlatButton(
             child: Text("Acept"),
             onPressed: (){
-                _DBHelperSQL.newBook(mu);
+                _DBHelperSQL.newBook(book);
                 Navigator.of(context).pop();
               },
           ),

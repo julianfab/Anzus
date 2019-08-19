@@ -58,13 +58,16 @@ class _ListMyBooks extends State<ListMyBooks>{
     super.initState();
     setState(() {
       _DBHelperSQL = new DataBaseHelperSQL();
-      _DBHelperSQL.getAllMyBooks().then((res){
-        setState(() {
-          list = res;
-        });
-      });
+      updateList();
     });
   }
 
+  void  updateList(){
+    _DBHelperSQL.getAllMyBooks().then((res){
+      setState(() {
+        list = res;
+      });
+    });
+  }
 
 }
