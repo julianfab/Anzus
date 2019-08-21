@@ -13,7 +13,60 @@ class _ListMyBooks extends State<ListMyBooks>{
   DataBaseHelperSQL _DBHelperSQL;
   @override
   Widget build(BuildContext context) {
-    return _getBody();
+    return Container(
+      margin: EdgeInsets.only(top: 25.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  "My Books",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              Expanded(
+                  child:
+                  RaisedButton(
+                      onPressed:(){
+                        insert(context);
+                      },
+                      color: Colors.green,
+                      child: Text(
+                        "Add Books",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      )
+                  )
+              )
+            ],
+          ),
+          new Divider(
+            endIndent: 20.0,
+            indent: 20.0,
+            color: Colors.black,
+          ),
+          _getBody()
+        ],
+      ),
+    );
+
+
+
+
+
+
+
+
   }
 
 
@@ -70,4 +123,41 @@ class _ListMyBooks extends State<ListMyBooks>{
     });
   }
 
+  void insert(BuildContext context){
+    MyBooks book = new MyBooks();
+    DataBaseHelperSQL _DBHelperSQL = new DataBaseHelperSQL();
+    showDialog(
+      barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("Insert new Book"),
+            content: TextField(
+              onChanged: (value){
+                book.Name_Book = value;
+              },
+              decoration: InputDecoration(labelText: 'New Book'),),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text("Acept"),
+                onPressed: (){
+                  _DBHelperSQL.newBook(book);
+                  updateList();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+    );
+
+  }
+
 }
+

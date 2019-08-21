@@ -60,5 +60,17 @@ class DataBaseHelperSQL {
     print("result sql: ${res.length} $db");
     return res.isNotEmpty ? res.map((c) => MyBooks.fromMap(c)).toList() : [];
   }
+
+  Future<int>deleteBook(MyBooks deletebook) async {
+    final db = await database;
+    return await db.delete("${MyBooks.NAME_TABLE}", where: "id = ?", whereArgs: [deletebook.id]);
+  }
+
+  updateBook(MyBooks newBook) async {
+    final db = await database;
+    var res = await db.update("${MyBooks.NAME_TABLE}", newBook.toMap(),
+        where: "id = ?", whereArgs: [newBook.id]);
+    return res;
+  }
 }
 

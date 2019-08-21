@@ -1,7 +1,6 @@
 import 'package:anzus/Model/ModelMyBooks.dart';
 import 'package:flutter/material.dart';
 import 'package:anzus/HomeScreen/ListMyBooks.dart';
-import 'package:anzus/HomeScreen/ButtonAddBooks.dart';
 import 'package:anzus/HomeScreen/Reminders.dart';
 import 'package:anzus/HomeScreen/HomeTopics.dart';
 
@@ -21,12 +20,6 @@ class _Home extends State<Home>{
         child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              ButtonAddBooks(),
-              new Divider(
-                endIndent: 20.0,
-                indent: 20.0,
-                color: Colors.black,
-              ),
               ListMyBooks(),
               Reminders(),
               HomeTopics(),
