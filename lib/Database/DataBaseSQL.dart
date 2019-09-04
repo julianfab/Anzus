@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:anzus/Model/ModelMyBooks.dart';
+import 'package:anzus/Model/ModelTopics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -14,10 +15,10 @@ class DataBaseHelperSQL {
   Database _database;
 
   Future<Database> get database async {
-    if (_database != null){
-     /* String databasesPath = await getDatabasesPath(); // direccion de donde se guarda las bases de datos
+    /* String databasesPath = await getDatabasesPath(); // direccion de donde se guarda las bases de datos
       String path = '$databasesPath/$DB_FILE_NAME';
       await deleteDatabase(path);*/
+    if (_database != null){
       print("ya existe");
      return _database;
     }
@@ -38,6 +39,7 @@ class DataBaseHelperSQL {
 
   void _onCreate(Database bd, int newVersion) async{
     await bd.execute("CREATE TABLE ${MyBooks.NAME_TABLE}(id integer primary key autoincrement, Name_Book varchar(50))");
+    await bd.execute("CREATE TABLE ${Topics.NAME_TABLE}(id integer, Name_Topic varchar(50), FOREIGN KEY (id) REFERENCES  ${MyBooks.NAME_TABLE} (id), PRIMARY KEY(id, Name_Topic) )");
   }
 /*
   newBook(MyBooks newbook) async {
@@ -48,6 +50,19 @@ class DataBaseHelperSQL {
     return res;
   }
 */
+  newTopics(Topics newTopic) async {
+    final db = await database;
+    var res = await db.insert("${Topics.NAME_TABLE}", newTopic.toMap());
+    return res;
+  }
+
+  Future<List<Topics>> getTopics(int id) async {
+    final db = await database;
+    var res = await db.query("${Topics.NAME_TABLE}", where: "id = ?", whereArgs: [id]);
+    return res.isNotEmpty ? res.map((c) => Topics.fromMap(c)).toList() : [];
+  }
+
+/////////////////////////////////////////////Dao Mybooks
   newBook(MyBooks newbook) async {
     final db = await database;
     var res = await db.insert("${MyBooks.NAME_TABLE}", newbook.toMap());

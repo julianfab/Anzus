@@ -1,5 +1,7 @@
 import 'package:anzus/Database/DataBaseSQL.dart';
 import 'package:anzus/Model/ModelMyBooks.dart';
+import 'package:anzus/Model/ModelTopics.dart';
+import 'package:anzus/view/list_page.dart';
 import 'package:flutter/material.dart';
 
 class ListMyBooks extends StatefulWidget{
@@ -71,6 +73,7 @@ class _ListMyBooks extends State<ListMyBooks>{
 
 
   Widget _getBody() {
+    Topics topic = new Topics();
     if (list == null) {
       return CircularProgressIndicator();
     } else if (list.length == 0) {
@@ -87,15 +90,33 @@ class _ListMyBooks extends State<ListMyBooks>{
                     itemExtent: 100.0,
                     itemCount: list.length,
                     itemBuilder: (context, position) {
-                      return Card(
-                         child: ListTile(
-                            title: Text('${list[position].Name_Book}',
-                              style: TextStyle(
-                                fontSize: 22.0,
-                                color: Colors.deepOrangeAccent,
-                              ),
-                            ),
-                          )
+                      return new GestureDetector(
+                        onTap: (){
+                          _DBHelperSQL.getTopics(list[position].id).then((res){
+                            if(res.isEmpty){
+                              topic.id = list[position].id;
+                              topic.Name_Topic = "Topic"+list[position].Name_Book;
+                              _DBHelperSQL.newTopics(topic);
+                              Navigator.of(context).push(MaterialPageRoute(builder: (c){
+                                return NotesListPage(this.list[position]);
+                              }));
+                            }else{
+                              Navigator.of(context).push(MaterialPageRoute(builder: (c){
+                                return NotesListPage(this.list[position]);
+                              }));
+                            }
+                          });
+                        },
+                          child: new Card(
+                              child: ListTile(
+                                title: Text('${list[position].Name_Book}',
+                                  style: TextStyle(
+                                    fontSize: 22.0,
+                                    color: Colors.deepOrangeAccent,
+                                  ),
+                                ),
+                              )
+                          ),
                       );
                     }
                 ),

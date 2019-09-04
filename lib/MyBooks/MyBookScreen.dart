@@ -1,5 +1,7 @@
 import 'package:anzus/Database/DataBaseSQL.dart';
 import 'package:anzus/Model/ModelMyBooks.dart';
+import 'package:anzus/Model/ModelTopics.dart';
+import 'package:anzus/view/list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -219,6 +221,7 @@ class BookWidget extends StatelessWidget {
   final OnDeleted onDeleted;
   final int position;
   final OnUpdate onUpdate;
+  DataBaseHelperSQL _DBHelperSQL = new DataBaseHelperSQL();
   BookWidget(this.book, this.onDeleted,this.position,this.onUpdate);
   var _option = [
     'Edit',
@@ -227,39 +230,58 @@ class BookWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Topics topic = new Topics();
     return Dismissible(
       direction: DismissDirection.endToStart,
       key: Key("${book.id}"),
-      child: Card(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 20.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    book.Name_Book,
-                    style: TextStyle(
-                      fontSize: 22.0,
-                      color: Colors.deepOrangeAccent,
+        child: new GestureDetector(
+          onTap: (){
+            _DBHelperSQL.getTopics(book.id).then((res){
+              if(res.isEmpty){
+                topic.id = book.id;
+                topic.Name_Topic = "Topic"+book.Name_Book;
+                _DBHelperSQL.newTopics(topic);
+                Navigator.of(context).push(MaterialPageRoute(builder: (c){
+                  return NotesListPage(this.book);
+                }));
+              }else{
+                Navigator.of(context).push(MaterialPageRoute(builder: (c){
+                  return NotesListPage(this.book);
+                }));
+              }
+            });
+          },
+          child: new Card(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 20.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        book.Name_Book,
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          color: Colors.deepOrangeAccent,
+                        ),
+                      ),
                     ),
-                  ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.mode_edit,
+                        color: Colors.green,
+                        size: 30.0,
+                      ),
+                      onPressed: (){
+                        this.onUpdate(this.position);
+                      },
+                    )
+                  ],
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.mode_edit,
-                    color: Colors.green,
-                    size: 30.0,
-                  ),
-                  onPressed: (){
-                    this.onUpdate(this.position);
-                  },
-                )
-              ],
-            ),
-          )
-      ),
+              )
+          ),
+        ),
         onDismissed: (direction){
         onDeleted(this.position);
         },
