@@ -33,8 +33,16 @@ class _NotesListPageState extends State<NotesListPage> {
   final formatter = DateFormat('yyyy-MM-dd hh:mm:ss');
 
   void _addNote() {
-    final note = Note(title: "", text: Note.emptyText, date: DateTime.now().toLocal());
-    _navigateToNoteDetails(note, null, startEditing: true);
+    if(_notes.length == 0){
+      final note = Note(id: 1,title: "", text: Note.emptyText, date: DateTime.now().toLocal());
+      _navigateToNoteDetails(note, null, startEditing: true);
+    }else{
+      var id_ = _notes.length;
+      Note no = _notes[id_-1];
+      final note = Note(id: no.id+1,title: "", text: Note.emptyText, date: DateTime.now().toLocal());
+      _navigateToNoteDetails(note, null, startEditing: true);
+    }
+
   }
 
   Future<File> get _localPath async {
@@ -51,7 +59,6 @@ class _NotesListPageState extends State<NotesListPage> {
       bool fileExists = jsonFile.existsSync();
       if (fileExists) {
         print('ko');
-        print(jsonFile.readAsStringSync());
         this.setState(() => _notes = Note.allFromResponse(jsonFile.readAsStringSync()));
       }else{
         print('ki');
@@ -73,7 +80,7 @@ class _NotesListPageState extends State<NotesListPage> {
     Navigator.of(context).push(
         MaterialPageRoute(
             builder: (c){
-              return FullPageEditorScreen(note, startEditing, books);
+              return FullPageEditorScreen(note: note, openOnEditing: startEditing, book: books, index: index);
             }
         ));
   }

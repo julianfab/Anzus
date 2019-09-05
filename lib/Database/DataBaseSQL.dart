@@ -56,10 +56,28 @@ class DataBaseHelperSQL {
     return res;
   }
 
-  Future<List<Topics>> getTopics(int id) async {
+  Future<Topics> getTopics(int id) async {
     final db = await database;
-    var res = await db.query("${Topics.NAME_TABLE}", where: "id = ?", whereArgs: [id]);
+    List<Map> res = await db.query("${Topics.NAME_TABLE}", where: "id = ?", whereArgs: [id]);
+    if (res.length > 0) {
+      return Topics.fromMap(res.first);
+    }else
+      {
+        return null;
+      }
+  }
+
+  Future<List<Topics>>getAllTopics() async {
+    final db = await database;
+    List<Map> res = await db.query("${Topics.NAME_TABLE}");
+    print("result sql: ${res.length} $db");
     return res.isNotEmpty ? res.map((c) => Topics.fromMap(c)).toList() : [];
+  }
+
+
+  Future<int>deleteTopic(int id) async {
+    final db = await database;
+    return await db.delete("${Topics.NAME_TABLE}", where: "id = ?", whereArgs: [id]);
   }
 
 /////////////////////////////////////////////Dao Mybooks

@@ -12,6 +12,7 @@ import 'package:quill_delta/quill_delta.dart';
 import 'package:zefyr/zefyr.dart';
 import 'package:path/path.dart' as p;
 import '../Model/note.dart';
+import 'list_page.dart';
 
 DataBaseHelperSQL _helperDB = new DataBaseHelperSQL();
 class ZefyrLogo extends StatelessWidget {
@@ -32,10 +33,11 @@ class ZefyrLogo extends StatelessWidget {
 
 class FullPageEditorScreen extends StatefulWidget {
 
-  FullPageEditorScreen(this.note, this.openOnEditing, this.book);
+  FullPageEditorScreen({this.note, this.openOnEditing, this.book, this.index});
   final MyBooks book;
   final Note note;
   final bool openOnEditing;
+  final int index;
 
   @override
   _FullPageEditorScreenState createState() => _FullPageEditorScreenState(book,note);
@@ -118,6 +120,9 @@ class _FullPageEditorScreenState extends State<FullPageEditorScreen> {
         ? [FlatButton(onPressed: _stopEditing, child: Text('DONE'))]
         : [FlatButton(onPressed: (){
             writeCounter();
+            Navigator.of(context).push(MaterialPageRoute(builder: (c){
+              return NotesListPage(this.book);
+            }));
           }, child: Text("GUARDAR")),FlatButton(onPressed: _startEditing, child: Text('EDIT')),];
 
     return Scaffold(
@@ -179,20 +184,33 @@ class _FullPageEditorScreenState extends State<FullPageEditorScreen> {
   }
 
   writeCounter()  async{
-    final jsonValue = jsonEncode(_controller.document.toJson());
-    var noteCopy = widget.note;
-    noteCopy.text = jsonValue;
     await getApplicationDocumentsDirectory().then((Directory directory) {
+      final jsonValue = jsonEncode(_controller.document.toJson());
+      var noteCopy = widget.note;
+      noteCopy.text = jsonValue;
       dir =  directory;
       Map<String, dynamic> fd;
       File jsonFile = File(dir.path+'/'+'Topic'+widget.book.Name_Book+'.json');
       fd = json.decode(jsonFile.readAsStringSync());
-      print(noteCopy.date);
-      fd['results'].add(noteCopy.toMap());
       bool fileExists = jsonFile.existsSync();
       print(noteCopy.toMap());
+      print(widget.index);
       if (fileExists){
-        jsonFile.writeAsStringSync(json.encode(fd));
+        if(widget.index == null){
+          print("crear");
+          fd['results'].add(noteCopy.toMap());
+          jsonFile.writeAsStringSync(json.encode(fd));
+        }
+        else{
+          print("actulizar");
+          print(fd['results'][widget.index]);
+          fd['results'][widget.index].update('id', (dynamic val)=> val= noteCopy.id);
+          fd['results'][widget.index].update('title', (dynamic val)=> val= noteCopy.title);
+          fd['results'][widget.index].update('text', (dynamic val)=> val= noteCopy.toMap()['text']);
+          fd['results'][widget.index].update('date', (dynamic val)=> val= DateFormat('yyyy-MM-dd hh:mm:ss').format(DateTime.now().toLocal()));
+          print(fd['results'][widget.index]);
+          jsonFile.writeAsStringSync(json.encode(fd));
+        }
       }
     });
     // Write the file

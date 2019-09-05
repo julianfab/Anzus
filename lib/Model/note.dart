@@ -4,10 +4,10 @@ import 'package:intl/intl.dart'; //date
 
 class Note{
 
-  Note({@required this.title, @required this.text, @required this.date});
+  Note({@required this.id, @required this.title, @required this.text, @required this.date});
 
 
-  //final int id;
+  final int id;
   String title;
   String text;
   final DateTime date;
@@ -28,11 +28,12 @@ class Note{
 
   static Note fromMap(Map map){
     var textJson = json.encode(map['text']);//5
-    return Note(title: map['title'], text: textJson, date: DateTime.parse(map['date']));
+    return Note(id: map['id'],title: map['title'], text: textJson, date: DateTime.parse(map['date']));
   }
 
   String toJson(){
     return json.encode({
+      'id': this.id,
       'title':this.title,
       'date':DateFormat('yyyy-MM-dd hh:mm:ss').format(this.date),
       'text':this.text,
@@ -40,9 +41,10 @@ class Note{
   }
 
   Map<String, dynamic> toMap() => {
+    'id': this.id,
     'title':this.title,
     'date':DateFormat('yyyy-MM-dd hh:mm:ss').format(this.date),
-    'text':this.text
+    'text':json.decode(this.text),
   };
 
 

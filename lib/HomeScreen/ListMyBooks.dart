@@ -93,7 +93,7 @@ class _ListMyBooks extends State<ListMyBooks>{
                       return new GestureDetector(
                         onTap: (){
                           _DBHelperSQL.getTopics(list[position].id).then((res){
-                            if(res.isEmpty){
+                            if(res==null){
                               topic.id = list[position].id;
                               topic.Name_Topic = "Topic"+list[position].Name_Book;
                               _DBHelperSQL.newTopics(topic);

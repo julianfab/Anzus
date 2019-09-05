@@ -85,8 +85,10 @@ class _MyBookScreen extends State<MyBookScreen> {
     _DBHelperSQL.deleteBook(book).then((value){
       setState(() {
         list.removeAt(index);
+        _DBHelperSQL.deleteTopic(book.id);
       });
     });
+
 
   }
 
@@ -237,7 +239,7 @@ class BookWidget extends StatelessWidget {
         child: new GestureDetector(
           onTap: (){
             _DBHelperSQL.getTopics(book.id).then((res){
-              if(res.isEmpty){
+              if(res == null){
                 topic.id = book.id;
                 topic.Name_Topic = "Topic"+book.Name_Book;
                 _DBHelperSQL.newTopics(topic);
