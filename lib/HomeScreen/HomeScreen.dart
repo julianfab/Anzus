@@ -43,7 +43,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Icon(Icons.notifications)
+              child: IconButton(icon: Icon(Icons.notifications),
+                onPressed: () {
+                insert(context);
+                },)
           ),
         ],
       ),
@@ -99,5 +102,104 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void insert(BuildContext context){
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("Do you Remember"),
+            content: Text("Intenta pensar y recordar sobre el tema 'Etica de compartamiento' piensalo durante 15 segundos"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Cancel"),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                  Notn(context);
+                },
+              ),
+              FlatButton(
+                child: Text("Acept"),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                  yes(context);
+                },
+              ),
+            ],
+          );
+        }
+    );
+
+  }
+
+  void yes(BuildContext context){
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title:  Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text("Congratulation"),
+                Row(
+                  children: <Widget>[
+                    Icon(
+                        Icons.monetization_on
+                    ),
+                    Text("+10")
+                  ],
+                )
+              ],
+            ),
+            content: Text("Has recoraddo el tema 'Etica de compartamiento'  durante una semana seguida"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Exit"),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+    );
+
+  }
+
+  void Notn(BuildContext context){
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text("Try again"),
+                Row(
+                  children: <Widget>[
+                    Icon(
+                        Icons.monetization_on
+                    ),
+                    Text("+2")
+                  ],
+                )
+              ],
+            ),
+            content: Text("Recordaste el tema durante 3 dias. Vuelte a retomar el tema 'Etica de compartamiento'"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Exit"),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]
+          );
+        }
+    );
+
+  }
 
 }
